@@ -87,6 +87,7 @@ const buildTweet = (tweetText) => {
 
     var currentLine = [words[0]];
     var currentColor = [colors[0]];
+    var lineSpacing = 8; // Padding between lines (in pixels)
     for (var n = 1; n < words.length; n++) {
       var word = words[n];
       var nextLine = currentLine.concat(word);
@@ -98,7 +99,7 @@ const buildTweet = (tweetText) => {
           paddingLeftRight += context.measureText(currentLine[i] + " ").width;
         }
         paddingLeftRight = 18;
-        y += fontSize;
+        y += fontSize + lineSpacing; // Add line spacing to the vertical position
         currentLine = [word];
         currentColor = [colors[n]];
       } else {
