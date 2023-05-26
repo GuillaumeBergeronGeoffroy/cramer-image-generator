@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cramer Tweet</title>
+  </head>
+  <body>
+    <script src="cramerTweetTemplator.js?v=0.2"></script>
+    <div style="margin-bottom: 10px">
+      Enter your tweet text to get Jim's tweet ... only single line for now (no
+      volontary line breaks) but will auto wrap to multiple lines
+    </div>
+    <input style="margin-bottom: 10px" type="text" id="tweet" />
+    <button onclick="getTweet()">Inverse $CRAMER</button>
+  </body>
+</html>
+
+<script>
+  // add event listener on enter for input
+  document.getElementById("tweet").addEventListener("keyup", function (event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      getTweet();
+    }
+  });
+</script>
+
+<style>
+  * {
+    padding: 0;
+    margin: 0;
+  }
+  body {
+    max-width: 500px;
+    margin: auto;
+    margin-top: 30px;
+  }
+  #tweet {
+    width: calc(100% - 40px);
+    font-size: 18px;
+    padding: 20px;
+  }
+  button {
+    padding: 20px;
+    margin: auto;
+    width: 100%;
+    display: block;
+    cursor: pointer;
+    background: #000;
+    color: #fff;
+    border-radius: 4px;
+    outline: none;
+    border: none;
+  }
+  button:hover {
+    background: #333;
+  }
+</style>
