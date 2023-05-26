@@ -8,9 +8,12 @@
     <link rel="shortcut icon" href="./img/jim.jpeg" type="image/x-icon" />
   </head>
   <body>
-    <script src="cramerTweetTemplator.js?v=0.0.6"></script>
+    <script src="cramerTweetTemplator.js?v=0.0.7"></script>
     <div class="jim"></div>
     <div style="margin-bottom: 10px">
+      <div class="title">
+        Jim Cramer <img class="tweeter" src="./img/logo.png" /> Generator
+      </div>
       Enter your tweet text to get Jim's tweet ... only single line for now (no
       volontary line breaks) but will auto wrap to multiple lines ...
       <span class="blue">@</span>, <span class="blue">#</span>,
@@ -20,7 +23,7 @@
     <textarea style="margin-bottom: 10px" type="text" id="tweet"></textarea>
     <button onclick="getTweet()">INVERSE $CRAMER</button>
     <div id="cramerlink">
-      by
+      made by
       <a class="blue" target="_blank" href="https://twitter.com/cramercoin"
         >@cramercoin</a
       >
@@ -86,5 +89,16 @@
   }
   .blue {
     color: rgb(29, 155, 240);
+  }
+  .title {
+    margin-bottom: 15px;
+    font-size: 22px;
+    text-align: center;
+  }
+  .tweeter {
+    width: 18px;
+    height: 18px;
+    margin-left: 3px;
+    margin-right: 3px;
   }
 </style>
