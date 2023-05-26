@@ -4,9 +4,12 @@
     <meta charset="UTF-8" />
     <title>Cramer Tweet</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- add favicon -->
+    <link rel="shortcut icon" href="./img/jim.jpeg" type="image/x-icon" />
   </head>
   <body>
-    <script src="cramerTweetTemplator.js?v=0.0.5"></script>
+    <script src="cramerTweetTemplator.js?v=0.0.6"></script>
+    <div class="jim"></div>
     <div style="margin-bottom: 10px">
       Enter your tweet text to get Jim's tweet ... only single line for now (no
       volontary line breaks) but will auto wrap to multiple lines ... @, #, $
@@ -42,6 +45,16 @@
     width: calc(100% - 20px);
     font-size: 18px;
     padding: 10px;
+  }
+  .jim {
+    background-image: url("./img/jim.jpeg");
+    background-size: cover;
+    background-position: center;
+    width: 150px;
+    height: 150px;
+    margin: auto;
+    border-radius: 300px;
+    margin-bottom: 20px;
   }
   button {
     padding: 20px;
