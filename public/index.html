@@ -12,11 +12,20 @@
     <div class="jim"></div>
     <div style="margin-bottom: 10px">
       Enter your tweet text to get Jim's tweet ... only single line for now (no
-      volontary line breaks) but will auto wrap to multiple lines ... @, #, $
-      prefixed word are colored
+      volontary line breaks) but will auto wrap to multiple lines ...
+      <span class="blue">@</span>, <span class="blue">#</span>,
+      <span class="blue">$</span>
+      prefixed words are colored
     </div>
     <textarea style="margin-bottom: 10px" type="text" id="tweet"></textarea>
     <button onclick="getTweet()">INVERSE $CRAMER</button>
+    <div id="cramerlink">
+      by
+      <a class="blue" target="_blank" href="https://twitter.com/cramercoin"
+        >@cramercoin</a
+      >
+      community
+    </div>
   </body>
 </html>
 
@@ -70,5 +79,12 @@
   }
   button:hover {
     background: #333;
+  }
+  #cramerlink {
+    margin-top: 20px;
+    text-align: center;
+  }
+  .blue {
+    color: rgb(29, 155, 240);
   }
 </style>
