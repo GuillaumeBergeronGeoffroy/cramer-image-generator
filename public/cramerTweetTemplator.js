@@ -1,9 +1,24 @@
-const getTweet = () => {
+const getTweet = (download = false) => {
   const tweet = document.getElementById("tweet").value;
-  buildTweet(tweet);
+  const repostCount = document.getElementById("repostCount").value;
+  const quoteCount = document.getElementById("quoteCount").value;
+  const likeCount = document.getElementById("likeCount").value;
+  buildTweet(
+    tweet,
+    repostCount != 0 ? repostCount : 0,
+    quoteCount != 0 ? quoteCount : 0,
+    likeCount != 0 ? likeCount : 0,
+    download
+  );
 };
 
-const buildTweet = (tweetText) => {
+const buildTweet = (
+  tweetText,
+  repostCount,
+  quoteCount,
+  likeCount,
+  download
+) => {
   var header = new Image();
   header.crossOrigin = "Anonymous";
   header.src = "./img/top.png";
@@ -61,6 +76,54 @@ const buildTweet = (tweetText) => {
       textYPos
     );
 
+    var repostXPos = textXPos; // Position at the start of the line
+    var repostYPos = textYPos + 92; // Move 30px down from previous line
+
+    statFontSize = 26;
+    context.fillStyle = "#FFFFFF";
+    context.font = "bold " + statFontSize + "px Arial";
+    context.fillText(repostCount, repostXPos, repostYPos);
+
+    context.fillStyle = "rgb(139, 152, 165)";
+    context.font = statFontSize + "px Arial";
+    context.fillText(
+      " Retweets",
+      repostXPos + context.measureText(repostCount).width,
+      repostYPos
+    );
+
+    var quotesXPos =
+      repostXPos + context.measureText(repostCount + " Retweets").width + 35; // Move right by the width of previous label + 10px
+    var quotesYPos = repostYPos; // Keep the same vertical position
+
+    context.fillStyle = "#FFFFFF";
+    context.font = "bold " + statFontSize + "px Arial";
+    context.fillText(quoteCount, quotesXPos, quotesYPos);
+
+    context.fillStyle = "rgb(139, 152, 165)";
+    context.font = statFontSize + "px Arial";
+    context.fillText(
+      " Quote Tweets",
+      quotesXPos + context.measureText(quoteCount).width,
+      quotesYPos
+    );
+
+    var likesXPos =
+      quotesXPos + context.measureText(quoteCount + " Quote Tweets").width + 35; // Move right by the width of previous label + 10px
+    var likesYPos = quotesYPos; // Keep the same vertical position
+
+    context.fillStyle = "#FFFFFF";
+    context.font = "bold " + fontSize + "px Arial";
+    context.fillText(likeCount, likesXPos, likesYPos);
+
+    context.fillStyle = "rgb(139, 152, 165)";
+    context.font = fontSize + "px Arial";
+    context.fillText(
+      " Likes",
+      likesXPos + context.measureText(likeCount).width,
+      likesYPos
+    );
+
     context.fillStyle = "#000";
     context.textBaseline = "middle";
 
@@ -113,10 +176,29 @@ const buildTweet = (tweetText) => {
       paddingLeftRight += context.measureText(currentLine[i] + " ").width;
     }
 
-    var link = document.createElement("a");
-    link.download = "tweet.png";
-    link.href = canvas.toDataURL();
-    link.click();
+    if (download) {
+      var link = document.createElement("a");
+      link.download = "tweet.png";
+      link.href = canvas.toDataURL();
+      link.click();
+    } else {
+      document.getElementById("tweetOutput").innerHTML = "";
+      // add to page
+      var img = document.createElement("img");
+      img.src = canvas.toDataURL();
+      img.style.width = "100%";
+      img.style.height = "100%";
+      img.style.objectFit = "cover";
+      img.style.objectPosition = "center";
+      img.style.borderRadius = "15px";
+      img.style.boxShadow = "0px 0px 10px 0px rgba(0,0,0,0.75)";
+      img.style.marginTop = "10px";
+      img.style.marginBottom = "20px";
+      img.style.marginLeft = "auto";
+      img.style.marginRight = "auto";
+      img.style.display = "block";
+      document.getElementById("tweetOutput").appendChild(img);
+    }
   });
 };
 
