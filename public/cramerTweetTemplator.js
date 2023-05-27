@@ -3,11 +3,15 @@ const getTweet = (download = false) => {
   const repostCount = document.getElementById("repostCount").value;
   const quoteCount = document.getElementById("quoteCount").value;
   const likeCount = document.getElementById("likeCount").value;
+  const bookmarkCount = document.getElementById("bookmarkCount").value;
+  const color = document.getElementById("color").value;
   buildTweet(
     tweet,
     repostCount != 0 ? repostCount : 0,
     quoteCount != 0 ? quoteCount : 0,
     likeCount != 0 ? likeCount : 0,
+    bookmarkCount != 0 ? bookmarkCount : 0,
+    color ? color : "black",
     download
   );
 };
@@ -17,22 +21,40 @@ const buildTweet = (
   repostCount,
   quoteCount,
   likeCount,
+  bookmarkCount,
+  color,
   download
 ) => {
   var header = new Image();
   header.crossOrigin = "Anonymous";
-  header.src = "./img/top.png";
+  header.src = "./img/top_" + color + ".png";
 
   var footer = new Image();
   footer.crossOrigin = "Anonymous";
-  footer.src = "./img/bottom.png";
+  footer.src = "./img/bottom_" + color + ".png";
 
   var canvas = document.createElement("canvas");
   var context = canvas.getContext("2d");
 
-  var canvasWidth = 500;
-  var paddingLeftRight = 18;
-  var fontSize = 25;
+  var canvasWidth = 495;
+  var paddingLeftRight = 30;
+  var fontSize = 30;
+  var canvasBackgroundColor =
+    color == "blue"
+      ? "rgb(21, 32, 43)"
+      : color == "white"
+      ? "rgb(255, 255, 255)"
+      : "rgb(0, 0, 0)";
+
+  var defaultColor =
+    color == "blue" || color == "black" ? "#FFFFFF" : "#000000";
+
+  var secondColor =
+    color == "black"
+      ? "rgb(113, 118, 123)"
+      : color == "blue"
+      ? "rgb(139, 152, 165)"
+      : "rgb(83, 100, 113)";
 
   context.font = fontSize + "px Arial";
 
@@ -54,37 +76,33 @@ const buildTweet = (
     context.font = fontSize + "px Arial";
 
     var lines = Math.ceil(context.measureText(tweetText).width / textAreaWidth);
-    var textAreaHeight = lines * fontSize + 30;
+    var textAreaHeight = lines * fontSize + 75;
 
     canvas.width = canvasWidth;
     canvas.height = header.height + textAreaHeight + footer.height;
 
-    context.fillStyle = "rgb(21, 32, 43)";
+    context.fillStyle = canvasBackgroundColor;
     context.fillRect(0, 0, canvas.width, canvas.height);
 
     context.drawImage(header, 0, 0);
     context.drawImage(footer, 0, canvas.height - footer.height);
 
-    context.font = "24px Arial";
-    context.fillStyle = "rgb(139, 152, 165)";
+    context.font = "28px Arial";
+    context.fillStyle = secondColor;
 
-    var textXPos = 0 + 18;
-    var textYPos = canvas.height - footer.height + 34;
-    context.fillText(
-      getTimeline() + " • Twitter for iPhone",
-      textXPos,
-      textYPos
-    );
+    var textXPos = 0 + paddingLeftRight;
+    var textYPos = canvas.height - footer.height + 25;
+    context.fillText(getTimeline(), textXPos, textYPos);
 
     var repostXPos = textXPos; // Position at the start of the line
-    var repostYPos = textYPos + 92; // Move 30px down from previous line
+    var repostYPos = textYPos + 101; // Move 30px down from previous line
 
-    statFontSize = 26;
-    context.fillStyle = "#FFFFFF";
+    statFontSize = 28;
+    context.fillStyle = defaultColor;
     context.font = "bold " + statFontSize + "px Arial";
     context.fillText(repostCount, repostXPos, repostYPos);
 
-    context.fillStyle = "rgb(139, 152, 165)";
+    context.fillStyle = secondColor;
     context.font = statFontSize + "px Arial";
     context.fillText(
       " Retweets",
@@ -96,32 +114,48 @@ const buildTweet = (
       repostXPos + context.measureText(repostCount + " Retweets").width + 35; // Move right by the width of previous label + 10px
     var quotesYPos = repostYPos; // Keep the same vertical position
 
-    context.fillStyle = "#FFFFFF";
+    context.fillStyle = defaultColor;
     context.font = "bold " + statFontSize + "px Arial";
     context.fillText(quoteCount, quotesXPos, quotesYPos);
 
-    context.fillStyle = "rgb(139, 152, 165)";
+    context.fillStyle = secondColor;
     context.font = statFontSize + "px Arial";
     context.fillText(
-      " Quote Tweets",
+      " Quotes",
       quotesXPos + context.measureText(quoteCount).width,
       quotesYPos
     );
 
     var likesXPos =
-      quotesXPos + context.measureText(quoteCount + " Quote Tweets").width + 35; // Move right by the width of previous label + 10px
+      quotesXPos + context.measureText(quoteCount + " Quotes").width + 35; // Move right by the width of previous label + 10px
     var likesYPos = quotesYPos; // Keep the same vertical position
 
-    context.fillStyle = "#FFFFFF";
+    context.fillStyle = defaultColor;
     context.font = "bold " + fontSize + "px Arial";
     context.fillText(likeCount, likesXPos, likesYPos);
 
-    context.fillStyle = "rgb(139, 152, 165)";
-    context.font = fontSize + "px Arial";
+    context.fillStyle = secondColor;
+    context.font = statFontSize + "px Arial";
     context.fillText(
       " Likes",
       likesXPos + context.measureText(likeCount).width,
       likesYPos
+    );
+
+    var bookmarksXPos =
+      likesXPos + context.measureText(likeCount + " Likes").width + 35; // Move right by the width of previous label + 10px
+    var bookmarksYPos = likesYPos; // Keep the same vertical position
+
+    context.fillStyle = defaultColor;
+    context.font = "bold " + statFontSize + "px Arial";
+    context.fillText(bookmarkCount, bookmarksXPos, bookmarksYPos);
+
+    context.fillStyle = secondColor;
+    context.font = statFontSize + "px Arial";
+    context.fillText(
+      " Bookmarks",
+      bookmarksXPos + context.measureText(bookmarkCount).width,
+      bookmarksYPos
     );
 
     context.fillStyle = "#000";
@@ -144,7 +178,7 @@ const buildTweet = (
       ) {
         return "rgb(29, 155, 240)";
       } else {
-        return "#FFFFFF";
+        return defaultColor;
       }
     });
 
@@ -161,7 +195,7 @@ const buildTweet = (
           context.fillText(currentLine[i], paddingLeftRight, y + halfFontSize);
           paddingLeftRight += context.measureText(currentLine[i] + " ").width;
         }
-        paddingLeftRight = 18;
+        paddingLeftRight = 30;
         y += fontSize + lineSpacing; // Add line spacing to the vertical position
         currentLine = [word];
         currentColor = [colors[n]];
@@ -235,4 +269,12 @@ const getTimeline = () => {
 
   // Then use the timestamp as your text
   return timestamp;
+};
+
+const setColor = (color) => {
+  document.getElementById("color").value = color;
+  document.querySelector(".active") &&
+    document.querySelector(".active").classList.remove("active");
+  document.querySelector("." + color).classList.add("active");
+  getTweet(false);
 };

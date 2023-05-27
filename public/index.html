@@ -8,48 +8,55 @@
     <link rel="shortcut icon" href="./img/jim.jpeg" type="image/x-icon" />
   </head>
   <body>
-    <script src="cramerTweetTemplator.js?v=0.1.0"></script>
-    <div class="jim"></div>
-    <div style="margin-bottom: 10px">
-      <div class="title">
-        Jim Cramer <img class="tweeter" src="./img/logo.png" /> Generator
+    <script src="cramerTweetTemplator.js?v=0.1.2"></script>
+    <div id="cramer-tweet-container">
+      <div class="jim"></div>
+      <div style="margin-bottom: 10px">
+        <div class="title">
+          Jim Cramer <img class="tweeter" src="./img/logo.png" /> Generator
+        </div>
+        Enter your tweet text to get Jim's tweet...
       </div>
-      Enter your tweet text to get Jim's tweet...
-    </div>
-    <textarea style="margin-bottom: 10px" type="text" id="tweet"></textarea>
-    <div class="label-list">
-      <div class="label">Retweets</div>
-      <div class="label">Quotes</div>
-      <div class="label">Likes</div>
-    </div>
-    <div class="input-list">
-      <input
-        style="margin-bottom: 10px"
-        type="text"
-        value="332"
-        id="repostCount"
-      />
-      <input
-        style="margin-bottom: 10px"
-        type="text"
-        value="78"
-        id="quoteCount"
-      />
-      <input
-        style="margin-bottom: 10px"
-        type="text"
-        value="21.5K"
-        id="likeCount"
-      />
-    </div>
-    <div id="tweetOutput"></div>
-    <button onclick="getTweet(true)">DOWNLOAD</button>
-    <div id="cramerlink">
-      made by
-      <a class="blue" target="_blank" href="https://twitter.com/cramercoin"
-        >@cramercoin</a
-      >
-      community
+      <textarea style="margin-bottom: 10px" type="text" id="tweet"></textarea>
+      <div class="label-list">
+        <div class="label">Retweets</div>
+        <div class="label">Quotes</div>
+        <div class="label">Likes</div>
+        <div class="label">Bookmarks</div>
+      </div>
+      <div class="input-list">
+        <input type="text" value="332" id="repostCount" />
+        <input type="text" value="78" id="quoteCount" />
+        <input type="text" value="21.5K " id="likeCount" />
+        <input type="text" value="8" id="bookmarkCount" />
+      </div>
+      <div id="tweetOutput"></div>
+      <div class="color-list">
+        <div
+          class="white active"
+          onclick="setColor('white')"
+          style="background: #fff"
+        ></div>
+        <div
+          class="blue"
+          onclick="setColor('blue')"
+          style="background: rgb(21, 32, 43)"
+        ></div>
+        <div
+          class="black"
+          onclick="setColor('black')"
+          style="background: #000"
+        ></div>
+        <input type="hidden" id="color" value="white" />
+      </div>
+      <button onclick="getTweet(true)">DOWNLOAD</button>
+      <div id="cramerlink">
+        made by
+        <a class="blue" target="_blank" href="https://twitter.com/cramercoin"
+          >@cramercoin</a
+        >
+        community
+      </div>
     </div>
   </body>
 </html>
@@ -81,6 +88,11 @@
     .addEventListener("input", function (event) {
       getTweet(false);
     });
+  document
+    .getElementById("bookmarkCount")
+    .addEventListener("input", function (event) {
+      getTweet(false);
+    });
   // on document ready
   document.addEventListener("DOMContentLoaded", function (event) {
     getTweet(false);
@@ -90,22 +102,20 @@
 </script>
 
 <style>
-  * {
-    padding: 0;
-    margin: 0;
+  #cramer-tweet-container * {
     font-family: Arial, Helvetica, sans-serif;
   }
-  body {
+  #cramer-tweet-container {
     width: calc(100% - 40px);
     max-width: 500px;
     margin: auto;
     margin-top: 30px;
   }
-  #tweet {
+  #cramer-tweet-container #tweet {
     width: calc(100% - 20px);
     padding: 10px;
   }
-  .jim {
+  #cramer-tweet-container .jim {
     background-image: url("./img/jim.jpeg");
     background-size: cover;
     background-position: center;
@@ -115,7 +125,7 @@
     border-radius: 300px;
     margin-bottom: 20px;
   }
-  button {
+  #cramer-tweet-container button {
     padding: 15px;
     margin: auto;
     width: calc(100% - 0px);
@@ -127,44 +137,71 @@
     outline: none;
     border: none;
   }
-  button:hover {
+  #cramer-tweet-container button:hover {
     background: #333;
   }
-  #cramerlink {
+  #cramer-tweet-container #cramerlink {
     margin-top: 20px;
     text-align: center;
   }
-  .blue {
+  #cramer-tweet-container .blue {
     color: rgb(29, 155, 240);
   }
-  .title {
-    margin-bottom: 35px;
+  #cramer-tweet-container .title {
+    margin-bottom: 25px;
     font-size: 22px;
     text-align: center;
   }
-  .tweeter {
+  #cramer-tweet-container .tweeter {
     width: 18px;
     height: 18px;
     margin-left: 3px;
     margin-right: 3px;
   }
-  .label-list {
+  #cramer-tweet-container .label-list {
     display: flex;
     justify-content: space-around;
     margin-bottom: 10px;
     margin-top: 5px;
   }
-  .label-list div {
-    width: calc(33% - 15px);
+  #cramer-tweet-container .label-list div {
+    width: calc(25% - 15px);
     text-align: center;
   }
-  .input-list {
+  #cramer-tweet-container .input-list {
     display: flex;
     justify-content: space-around;
+    margin-bottom: 25px;
+    padding: 10px;
+    background-color: rgb(247, 249, 249);
+    border-radius: 4px;
   }
-  .input-list input {
-    width: calc(33% - 15px);
+  #cramer-tweet-container .input-list input {
+    width: calc(25% - 15px);
     text-align: center;
     padding: 3px;
+  }
+  #cramer-tweet-container .color-list {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    padding: 10px;
+    background-color: rgb(247, 249, 249);
+    border-radius: 4px;
+  }
+  #cramer-tweet-container .color-list div {
+    border: 2px solid rgb(66, 83, 100);
+    width: calc(33% - 25px);
+    text-align: center;
+    height: 30px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  #cramer-tweet-container .color-list div:hover {
+    opacity: 0.7;
+  }
+  #cramer-tweet-container .color-list div.active {
+    border: 2px solid rgb(29, 155, 240);
   }
 </style>
