@@ -8,14 +8,13 @@
     <link rel="shortcut icon" href="./img/jim.jpeg" type="image/x-icon" />
   </head>
   <body>
-    <script src="cramerTweetTemplator.js?v=0.1.2"></script>
     <div id="cramer-tweet-container">
-      <div class="jim"></div>
+      <div class="jim-photo"></div>
       <div style="margin-bottom: 10px">
         <div class="title">
-          Jim Cramer <img class="tweeter" src="./img/logo.png" /> Generator
+          JIM CRAMER <img class="tweeter-icon" src="./img/logo.png" /> GENERATOR
         </div>
-        Enter your tweet text to get Jim's tweet...
+        <span class="desc">What should Jim Inverse Today?</span>
       </div>
       <textarea style="margin-bottom: 10px" type="text" id="tweet"></textarea>
       <div class="label-list">
@@ -49,14 +48,7 @@
         ></div>
         <input type="hidden" id="color" value="white" />
       </div>
-      <button onclick="getTweet(true)">DOWNLOAD</button>
-      <div id="cramerlink">
-        made by
-        <a class="blue" target="_blank" href="https://twitter.com/cramercoin"
-          >@cramercoin</a
-        >
-        community
-      </div>
+      <button onclick="getTweet(true)">Download</button>
     </div>
   </body>
 </html>
@@ -99,11 +91,301 @@
     // focus on input
     document.getElementById("tweet").focus();
   });
+  const getTweet = (download = false) => {
+    const tweet = document.getElementById("tweet").value;
+    const repostCount = document.getElementById("repostCount").value;
+    const quoteCount = document.getElementById("quoteCount").value;
+    const likeCount = document.getElementById("likeCount").value;
+    const bookmarkCount = document.getElementById("bookmarkCount").value;
+    const color = document.getElementById("color").value;
+    buildTweet(
+      tweet,
+      repostCount != 0 ? repostCount : 0,
+      quoteCount != 0 ? quoteCount : 0,
+      likeCount != 0 ? likeCount : 0,
+      bookmarkCount != 0 ? bookmarkCount : 0,
+      color ? color : "black",
+      download
+    );
+  };
+
+  const buildTweet = (
+    tweetText,
+    repostCount,
+    quoteCount,
+    likeCount,
+    bookmarkCount,
+    color,
+    download
+  ) => {
+    var header = new Image();
+    header.crossOrigin = "Anonymous";
+    header.src = "./img/top_" + color + ".png";
+
+    var footer = new Image();
+    footer.crossOrigin = "Anonymous";
+    footer.src = "./img/bottom_" + color + ".png";
+
+    var canvas = document.createElement("canvas");
+    var context = canvas.getContext("2d");
+
+    var canvasWidth = 495;
+    var paddingLeftRight = 30;
+    var fontSize = 30;
+    var canvasBackgroundColor =
+      color == "blue"
+        ? "rgb(21, 32, 43)"
+        : color == "white"
+        ? "rgb(255, 255, 255)"
+        : "rgb(0, 0, 0)";
+
+    var defaultColor =
+      color == "blue" || color == "black" ? "#FFFFFF" : "#000000";
+
+    var secondColor =
+      color == "black"
+        ? "rgb(113, 118, 123)"
+        : color == "blue"
+        ? "rgb(139, 152, 165)"
+        : "rgb(83, 100, 113)";
+
+    context.font = fontSize + "px Arial";
+
+    canvas.width = canvasWidth;
+
+    Promise.all([
+      new Promise((resolve, reject) => {
+        header.onload = resolve;
+        header.onerror = reject;
+      }),
+      new Promise((resolve, reject) => {
+        footer.onload = resolve;
+        footer.onerror = reject;
+      }),
+    ]).then(() => {
+      var canvasWidth = header.width;
+      var textAreaWidth = canvasWidth - 2 * paddingLeftRight - 20;
+
+      context.font = fontSize + "px Arial";
+
+      var lines = Math.ceil(
+        context.measureText(tweetText).width / textAreaWidth
+      );
+      var textAreaHeight = lines * fontSize + 75;
+
+      canvas.width = canvasWidth;
+      canvas.height = header.height + textAreaHeight + footer.height;
+
+      context.fillStyle = canvasBackgroundColor;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      context.drawImage(header, 0, 0);
+      context.drawImage(footer, 0, canvas.height - footer.height);
+
+      context.font = "28px Arial";
+      context.fillStyle = secondColor;
+
+      var textXPos = 0 + paddingLeftRight;
+      var textYPos = canvas.height - footer.height + 25;
+      context.fillText(getTimeline(), textXPos, textYPos);
+
+      var repostXPos = textXPos; // Position at the start of the line
+      var repostYPos = textYPos + 101; // Move 30px down from previous line
+
+      statFontSize = 28;
+      context.fillStyle = defaultColor;
+      context.font = "bold " + statFontSize + "px Arial";
+      context.fillText(repostCount, repostXPos, repostYPos);
+
+      context.fillStyle = secondColor;
+      context.font = statFontSize + "px Arial";
+      context.fillText(
+        " Retweets",
+        repostXPos + context.measureText(repostCount).width,
+        repostYPos
+      );
+
+      var quotesXPos =
+        repostXPos + context.measureText(repostCount + " Retweets").width + 35; // Move right by the width of previous label + 10px
+      var quotesYPos = repostYPos; // Keep the same vertical position
+
+      context.fillStyle = defaultColor;
+      context.font = "bold " + statFontSize + "px Arial";
+      context.fillText(quoteCount, quotesXPos, quotesYPos);
+
+      context.fillStyle = secondColor;
+      context.font = statFontSize + "px Arial";
+      context.fillText(
+        " Quotes",
+        quotesXPos + context.measureText(quoteCount).width,
+        quotesYPos
+      );
+
+      var likesXPos =
+        quotesXPos + context.measureText(quoteCount + " Quotes").width + 35; // Move right by the width of previous label + 10px
+      var likesYPos = quotesYPos; // Keep the same vertical position
+
+      context.fillStyle = defaultColor;
+      context.font = "bold " + fontSize + "px Arial";
+      context.fillText(likeCount, likesXPos, likesYPos);
+
+      context.fillStyle = secondColor;
+      context.font = statFontSize + "px Arial";
+      context.fillText(
+        " Likes",
+        likesXPos + context.measureText(likeCount).width,
+        likesYPos
+      );
+
+      var bookmarksXPos =
+        likesXPos + context.measureText(likeCount + " Likes").width + 35; // Move right by the width of previous label + 10px
+      var bookmarksYPos = likesYPos; // Keep the same vertical position
+
+      context.fillStyle = defaultColor;
+      context.font = "bold " + statFontSize + "px Arial";
+      context.fillText(bookmarkCount, bookmarksXPos, bookmarksYPos);
+
+      context.fillStyle = secondColor;
+      context.font = statFontSize + "px Arial";
+      context.fillText(
+        " Bookmarks",
+        bookmarksXPos + context.measureText(bookmarkCount).width,
+        bookmarksYPos
+      );
+
+      context.fillStyle = "#000";
+      context.textBaseline = "middle";
+
+      var words = tweetText.split(" ");
+      var line = [];
+      context.textBaseline = "middle";
+      var halfFontSize = fontSize / 2;
+
+      var textAreaMiddle = header.height + textAreaHeight / 2 - 15 * lines;
+      var y = textAreaMiddle;
+
+      context.font = fontSize + "px Arial";
+      var colors = words.map((word) => {
+        if (
+          word.startsWith("@") ||
+          word.startsWith("#") ||
+          word.startsWith("$")
+        ) {
+          return "rgb(29, 155, 240)";
+        } else {
+          return defaultColor;
+        }
+      });
+
+      var currentLine = [words[0]];
+      var currentColor = [colors[0]];
+      var lineSpacing = 8; // Padding between lines (in pixels)
+      for (var n = 1; n < words.length; n++) {
+        var word = words[n];
+        var nextLine = currentLine.concat(word);
+        var nextLineWidth = context.measureText(nextLine.join(" ")).width;
+        if (nextLineWidth > textAreaWidth) {
+          for (var i = 0; i < currentLine.length; i++) {
+            context.fillStyle = currentColor[i];
+            context.fillText(
+              currentLine[i],
+              paddingLeftRight,
+              y + halfFontSize
+            );
+            paddingLeftRight += context.measureText(currentLine[i] + " ").width;
+          }
+          paddingLeftRight = 30;
+          y += fontSize + lineSpacing; // Add line spacing to the vertical position
+          currentLine = [word];
+          currentColor = [colors[n]];
+        } else {
+          currentLine.push(word);
+          currentColor.push(colors[n]);
+        }
+      }
+      for (var i = 0; i < currentLine.length; i++) {
+        context.fillStyle = currentColor[i];
+        context.fillText(currentLine[i], paddingLeftRight, y + halfFontSize);
+        paddingLeftRight += context.measureText(currentLine[i] + " ").width;
+      }
+
+      if (download) {
+        var link = document.createElement("a");
+        link.download = "tweet.png";
+        link.href = canvas.toDataURL();
+        link.click();
+      } else {
+        document.getElementById("tweetOutput").innerHTML = "";
+        // add to page
+        var img = document.createElement("img");
+        img.src = canvas.toDataURL();
+        img.style.width = "100%";
+        img.style.height = "100%";
+        img.style.objectFit = "cover";
+        img.style.objectPosition = "center";
+        img.style.borderRadius = "15px";
+        // slick white box shadow
+        img.style.boxShadow = "0px 0px 5px 0px rgba(255,255,255,0.75)";
+        img.style.marginTop = "10px";
+        img.style.marginBottom = "20px";
+        img.style.marginLeft = "auto";
+        img.style.marginRight = "auto";
+        img.style.display = "block";
+        document.getElementById("tweetOutput").appendChild(img);
+      }
+    });
+  };
+
+  const getTimeline = () => {
+    // Generate the current timestamp
+    var now = new Date();
+
+    // Get hours, minutes, day, month, and year
+    var hours = now.getHours();
+    var minutes = now.getMinutes();
+    var day = now.getDate();
+    var month = now.toLocaleString("default", { month: "long" }); // get month name
+    var year = now.getFullYear();
+
+    // Convert hours from 24-hour to 12-hour format and set AM/PM
+    var ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+
+    // Format the timestamp
+    var timestamp =
+      hours +
+      ":" +
+      minutes +
+      " " +
+      ampm +
+      " • " +
+      month +
+      " " +
+      day +
+      ", " +
+      year;
+
+    // Then use the timestamp as your text
+    return timestamp;
+  };
+
+  const setColor = (color) => {
+    document.getElementById("color").value = color;
+    document.querySelector(".active") &&
+      document.querySelector(".active").classList.remove("active");
+    document.querySelector("." + color).classList.add("active");
+    getTweet(false);
+  };
 </script>
 
 <style>
+  body {
+    background: #000;
+  }
   #cramer-tweet-container * {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Roboto, sans-serif;
   }
   #cramer-tweet-container {
     width: calc(100% - 40px);
@@ -111,11 +393,7 @@
     margin: auto;
     margin-top: 30px;
   }
-  #cramer-tweet-container #tweet {
-    width: calc(100% - 20px);
-    padding: 10px;
-  }
-  #cramer-tweet-container .jim {
+  #cramer-tweet-container .jim-photo {
     background-image: url("./img/jim.jpeg");
     background-size: cover;
     background-position: center;
@@ -123,78 +401,90 @@
     height: 150px;
     margin: auto;
     border-radius: 300px;
-    margin-bottom: 20px;
-  }
-  #cramer-tweet-container button {
-    padding: 15px;
-    margin: auto;
-    width: calc(100% - 0px);
-    display: block;
-    cursor: pointer;
-    background: #000;
-    color: #fff;
-    border-radius: 4px;
-    outline: none;
-    border: none;
-  }
-  #cramer-tweet-container button:hover {
-    background: #333;
-  }
-  #cramer-tweet-container #cramerlink {
-    margin-top: 20px;
-    text-align: center;
-  }
-  #cramer-tweet-container .blue {
-    color: rgb(29, 155, 240);
+    margin-bottom: 30px;
   }
   #cramer-tweet-container .title {
-    margin-bottom: 25px;
-    font-size: 22px;
+    margin-bottom: 35px;
     text-align: center;
+    color: rgb(0, 255, 127);
+    font-weight: 900;
+    font-size: 28px;
+    line-height: 28px;
   }
-  #cramer-tweet-container .tweeter {
-    width: 18px;
-    height: 18px;
+  #cramer-tweet-container .tweeter-icon {
+    width: 22px;
+    height: 22px;
     margin-left: 3px;
     margin-right: 3px;
+  }
+  #cramer-tweet-container .desc {
+    text-align: center;
+    color: rgb(0, 255, 127);
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 18px;
+  }
+  #cramer-tweet-container #tweet {
+    width: calc(100% - 20px);
+    padding: 10px;
+    background-color: #000;
+    border-radius: 4px;
+    border: 1px solid rgb(33, 33, 33);
+    color: #fff;
+    font-size: 16px;
+    outline: none;
   }
   #cramer-tweet-container .label-list {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 10px;
-    margin-top: 5px;
+    margin-top: 0px;
+    padding: 15px;
   }
   #cramer-tweet-container .label-list div {
-    width: calc(25% - 15px);
+    width: calc(25% - 16px);
     text-align: center;
+    color: rgb(0, 255, 127);
   }
   #cramer-tweet-container .input-list {
     display: flex;
     justify-content: space-around;
     margin-bottom: 25px;
-    padding: 10px;
-    background-color: rgb(247, 249, 249);
+    padding: 15px;
+    background-color: #000;
     border-radius: 4px;
+    border: 1px solid rgb(33, 33, 33);
   }
   #cramer-tweet-container .input-list input {
-    width: calc(25% - 15px);
+    width: calc(25% - 16px);
     text-align: center;
-    padding: 3px;
+    padding: 20px 8px 20px 8px;
+    font-size: 16px;
+    background-color: #000;
+    color: #fff;
+    outline: none;
+    /* border-radius: 4px; */
+    border: 2px solid #ffffff00;
+    /* border: 1px solid rgba(0, 255, 127, 0.2); */
+  }
+  #cramer-tweet-container .input-list input:focus {
+    border: 2px solid rgba(0, 255, 127, 0.56);
+    border-radius: 4px;
   }
   #cramer-tweet-container .color-list {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 20px;
-    margin-top: 5px;
-    padding: 10px;
-    background-color: rgb(247, 249, 249);
+    margin-bottom: 30px;
+    margin-top: 25px;
+    padding: 25px 15px 25px 15px;
+    background-color: rgba(12, 19, 57, 0.7);
+    border: 1px solid rgb(33, 33, 33);
     border-radius: 4px;
   }
   #cramer-tweet-container .color-list div {
-    border: 2px solid rgb(66, 83, 100);
+    border: 2px solid #ffffff00;
     width: calc(33% - 25px);
     text-align: center;
-    height: 30px;
+    height: 40px;
     border-radius: 4px;
     cursor: pointer;
   }
@@ -202,6 +492,32 @@
     opacity: 0.7;
   }
   #cramer-tweet-container .color-list div.active {
-    border: 2px solid rgb(29, 155, 240);
+    border: 2px solid rgb(0, 255, 127);
+  }
+  #cramer-tweet-container button {
+    padding: 20px;
+    margin: auto;
+    width: calc(100% - 0px);
+    display: block;
+    cursor: pointer;
+    background-image: linear-gradient(
+      to left,
+      rgb(0, 255, 127),
+      rgb(64, 228, 84)
+    );
+    color: #000;
+    border-radius: 16px;
+    font-size: 21px;
+    font-weight: 500;
+    outline: none;
+    border: none;
+    transition: all 0.3s;
+  }
+  #cramer-tweet-container button:hover {
+    background-color: rgb(74, 255, 165);
+    filter: brightness(1.5);
+  }
+  #cramer-tweet-container .blue {
+    color: rgb(29, 155, 240);
   }
 </style>
