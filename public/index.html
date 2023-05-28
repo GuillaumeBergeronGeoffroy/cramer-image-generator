@@ -317,8 +317,9 @@
         link.href = canvas.toDataURL();
         link.click();
       } else {
-        document.getElementById("tweetOutput").innerHTML = "";
-        // add to page
+        var tweetOutput = document.getElementById("tweetOutput");
+        var nextTweetOutput = tweetOutput.cloneNode(false);
+
         var img = document.createElement("img");
         img.src = canvas.toDataURL();
         img.style.width = "100%";
@@ -333,7 +334,9 @@
         img.style.marginLeft = "auto";
         img.style.marginRight = "auto";
         img.style.display = "block";
-        document.getElementById("tweetOutput").appendChild(img);
+
+        nextTweetOutput.appendChild(img);
+        tweetOutput.parentNode.replaceChild(nextTweetOutput, tweetOutput);
       }
     });
   };
@@ -516,6 +519,7 @@
     outline: none;
     border: none;
     transition: all 0.3s;
+    margin-bottom: 50px;
   }
   #cramer-tweet-container button:hover {
     background-color: rgb(74, 255, 165);
