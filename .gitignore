@@ -18,6 +18,9 @@ firebase-debug.*.log*
 .firebaserc
 firebase.json
 
+# all .DS_Store files
+**/.DS_Store
+
 # Runtime data
 pids
 *.pid
