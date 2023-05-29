@@ -19,7 +19,7 @@
         <span class="desc">What should Jim Inverse Today?</span>
       </div>
       <textarea style="margin-bottom: 10px" type="text" id="tweet">
-I am bearish on @cramercoin</textarea
+I am bearish on @cramercoin </textarea
       >
       <div class="label-list">
         <div class="label">Retweets</div>
@@ -93,7 +93,10 @@ I am bearish on @cramercoin</textarea
   document.addEventListener("DOMContentLoaded", function (event) {
     getTweet(false);
     // focus on input
-    document.getElementById("tweet").focus();
+    // put caret at end of text
+    var input = document.getElementById("tweet");
+    input.focus();
+    input.setSelectionRange(input.value.length, input.value.length);
   });
   const getTweet = (download = false) => {
     const tweet = document.getElementById("tweet").value;
