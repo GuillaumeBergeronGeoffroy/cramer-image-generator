@@ -419,7 +419,7 @@ I am bearish on @cramercoin </textarea
 
     const data = await response.text();
 
-    document.getElementById("tweet").innerText = data;
+    document.getElementById("tweet").value = data;
     getTweet(false);
   };
 </script>
