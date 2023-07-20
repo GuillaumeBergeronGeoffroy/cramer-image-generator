@@ -123,10 +123,10 @@ I am bearish on @cramercoin </textarea
     const color = document.getElementById("color").value;
     buildTweet(
       tweet,
-      repostCount != 0 ? repostCount : 0,
-      quoteCount != 0 ? quoteCount : 0,
-      likeCount != 0 ? likeCount : 0,
-      bookmarkCount != 0 ? bookmarkCount : 0,
+      repostCount,
+      quoteCount,
+      likeCount,
+      bookmarkCount,
       color ? color : "black",
       download
     );
@@ -212,69 +212,69 @@ I am bearish on @cramercoin </textarea
       var textYPos = canvas.height - footer.height + 25;
       context.fillText(getTimeline(), textXPos, textYPos);
 
-      var repostXPos = textXPos; // Position at the start of the line
-      var repostYPos = textYPos + 101; // Move 30px down from previous line
+      var lastXPos = textXPos;
+      var lastText = "";
 
-      statFontSize = 28;
-      context.fillStyle = defaultColor;
-      context.font = "bold " + statFontSize + "px Arial";
-      context.fillText(repostCount, repostXPos, repostYPos);
+      function drawElement(label, count, xPos, yPos) {
+        if (count === "" || count === null) {
+          return xPos; // If count is empty or null, just return the current position
+        }
 
-      context.fillStyle = secondColor;
-      context.font = statFontSize + "px Arial";
-      context.fillText(
+        statFontSize = 28;
+        context.fillStyle = defaultColor;
+        context.font = "bold " + statFontSize + "px Arial";
+        context.fillText(count, xPos, yPos);
+
+        context.fillStyle = secondColor;
+        context.font = statFontSize + "px Arial";
+        context.fillText(label, xPos + context.measureText(count).width, yPos);
+
+        return xPos + context.measureText(count + label).width + 35; // Move right by the width of label + 10px
+      }
+
+      var repostXPos = drawElement(
         " Retweets",
-        repostXPos + context.measureText(repostCount).width,
-        repostYPos
+        repostCount,
+        textXPos,
+        textYPos + 101
       );
+      if (repostCount !== "" && repostCount !== null) {
+        lastXPos = repostXPos;
+        lastText = repostCount + " Retweets";
+      }
 
-      var quotesXPos =
-        repostXPos + context.measureText(repostCount + " Retweets").width + 35; // Move right by the width of previous label + 10px
-      var quotesYPos = repostYPos; // Keep the same vertical position
-
-      context.fillStyle = defaultColor;
-      context.font = "bold " + statFontSize + "px Arial";
-      context.fillText(quoteCount, quotesXPos, quotesYPos);
-
-      context.fillStyle = secondColor;
-      context.font = statFontSize + "px Arial";
-      context.fillText(
+      var quotesXPos = drawElement(
         " Quotes",
-        quotesXPos + context.measureText(quoteCount).width,
-        quotesYPos
+        quoteCount,
+        lastXPos,
+        textYPos + 101
       );
+      if (quoteCount !== "" && quoteCount !== null) {
+        lastXPos = quotesXPos;
+        lastText = quoteCount + " Quotes";
+      }
 
-      var likesXPos =
-        quotesXPos + context.measureText(quoteCount + " Quotes").width + 35; // Move right by the width of previous label + 10px
-      var likesYPos = quotesYPos; // Keep the same vertical position
-
-      context.fillStyle = defaultColor;
-      context.font = "bold " + fontSize + "px Arial";
-      context.fillText(likeCount, likesXPos, likesYPos);
-
-      context.fillStyle = secondColor;
-      context.font = statFontSize + "px Arial";
-      context.fillText(
+      var likesXPos = drawElement(
         " Likes",
-        likesXPos + context.measureText(likeCount).width,
-        likesYPos
+        likeCount,
+        lastXPos,
+        textYPos + 101
       );
+      if (likeCount !== "" && likeCount !== null) {
+        lastXPos = likesXPos;
+        lastText = likeCount + " Likes";
+      }
 
-      var bookmarksXPos =
-        likesXPos + context.measureText(likeCount + " Likes").width + 35; // Move right by the width of previous label + 10px
-      var bookmarksYPos = likesYPos; // Keep the same vertical position
-
-      context.fillStyle = defaultColor;
-      context.font = "bold " + statFontSize + "px Arial";
-      context.fillText(bookmarkCount, bookmarksXPos, bookmarksYPos);
-
-      context.fillStyle = secondColor;
-      context.font = statFontSize + "px Arial";
-      context.fillText(
+      var bookmarksXPos = drawElement(
         " Bookmarks",
-        bookmarksXPos + context.measureText(bookmarkCount).width,
-        bookmarksYPos
+        bookmarkCount,
+        lastXPos,
+        textYPos + 101
       );
+      if (bookmarkCount !== "" && bookmarkCount !== null) {
+        lastXPos = bookmarksXPos;
+        lastText = bookmarkCount + " Bookmarks";
+      }
 
       context.fillStyle = "#000";
       context.textBaseline = "middle";
