@@ -43,11 +43,36 @@ I am bearish on @cramercoin </textarea
         <div class="label">Likes</div>
         <div class="label">Bookmarks</div>
       </div>
-      <div class="input-list">
+      <div class="input-list" style="margin-bottom: 5px">
         <input type="text" value="332" id="repostCount" />
         <input type="text" value="78" id="quoteCount" />
         <input type="text" value="21.5K " id="likeCount" />
         <input type="text" value="8" id="bookmarkCount" />
+      </div>
+
+      <div class="input-list">
+        <!-- <div class="label-list" style="justify-content: flex-start"> -->
+        <!-- <div class="label">Time</div> -->
+        <!-- </div> -->
+        <!-- datetime with a clear button -->
+        <input
+          style="width: 100%"
+          type="datetime-local"
+          value=""
+          id="datetime"
+        />
+        <button
+          style="
+            width: 100px;
+            height: unset;
+            margin: 0;
+            border-radius: 0;
+            margin-left: 5px;
+          "
+          onclick="clearDate()"
+        >
+          NOW
+        </button>
       </div>
       <div id="tweetOutput"></div>
       <div class="color-list">
@@ -102,6 +127,11 @@ I am bearish on @cramercoin </textarea
     });
   document
     .getElementById("bookmarkCount")
+    .addEventListener("input", function (event) {
+      getTweet(false);
+    });
+  document
+    .getElementById("datetime")
     .addEventListener("input", function (event) {
       getTweet(false);
     });
@@ -362,9 +392,20 @@ I am bearish on @cramercoin </textarea
     });
   };
 
+  const clearDate = () => {
+    document.getElementById("datetime").value = "";
+    getTweet(false);
+  };
+
   const getTimeline = () => {
     // Generate the current timestamp
     var now = new Date();
+    // if #datetime datetime input value is set
+    if (document.getElementById("datetime").value) {
+      // Get the datetime input value
+      var datetime = new Date(document.getElementById("datetime").value);
+      now = datetime;
+    }
 
     // Get hours, minutes, day, month, and year
     var hours = now.getHours();
